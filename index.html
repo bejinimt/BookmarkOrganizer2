@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Bookmark Tool</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>📚 Bookmark Tool</h1>
+</header>
+
+<section id="controls">
+
+    <button id="btnLoad">📂 Datei laden</button>
+    <input type="file" id="fileInput" style="display:none">
+
+    <button id="btnToggleNumbers">🔢 Nummern ausblenden</button>
+    <button id="btnToggleAllUrls">🔗 Alle URLs anzeigen</button>
+    <button id="btnShowDuplicates">🧬 Doppelte Links anzeigen</button>
+    <button id="btnToggleLocations">📍 Fundstellen anzeigen</button>
+    <button id="btnToggleCheckboxes">☑️ Checkboxen anzeigen</button>
+
+    <button id="btnHideSelected">🙈 Ausgewählte ausblenden</button>
+    <button id="btnShowHidden">👁️ Ausgeblendete einblenden</button>
+
+    <button id="btnSelectEmptyFolders">📁 Leere Ordner markieren</button>
+    <button id="btnSelectVisible">👓 Sichtbare auswählen</button>
+    <button id="btnMoveVisibleChecked">📦 Ausgewählte verschieben</button>
+
+    <button id="btnExport">💾 JSON exportieren</button>
+    <button id="btnExportHtml">🌐 HTML exportieren</button>
+
+    <!-- NEU: to_delete Buttons -->
+    <button id="btnToDelete">🗑️ to_delete</button>
+    <button id="btnToDeleteUndo">♻️ to_delete aufheben</button>
+
+    <input type="text" id="searchInput" placeholder="🔍 Suche...">
+</section>
+
+<section id="messageArea"></section>
+
+<section id="treeContainer"></section>
+
+<!-- Debug Overlay -->
+<div id="debugOverlay" class="debug-overlay">
+
+    <div id="debugHeader" class="debug-header">
+        Debug-Fenster
+    </div>
+
+    <div class="debug-controls">
+        <input id="debugAbsoluteInput" placeholder="absoluteNumber">
+        <button id="debugSearchAbsoluteBtn">Suchen</button>
+    </div>
+
+    <pre id="debugContent" class="debug-content"></pre>
+
+    <button id="debugOverlayClose" class="debug-close">Schließen</button>
+</div>
+
+
+<!-- JS-Dateien (Reihenfolge ist WICHTIG!) -->
+<script src="dom-init.js"></script>
+<script src="search.js"></script>
+
+<script src="bookmark-index.js"></script>
+<script src="parse-json.js"></script>
+<script src="parse-html-with-tags.js"></script>
+
+<script src="is-folder-empty.js"></script>
+
+<script src="duplicates.js"></script>
+<script src="duplicates-apply.js"></script>
+
+<script src="export-html.js"></script>
+<script src="visibility.js"></script>
+<script src="checkbox.js"></script>
+<script src="move.js"></script>
+
+<!-- NEU: to_delete -->
+<script src="to-delete.js"></script>
+
+<script src="filter.js"></script>
+<script src="render-tree.js"></script>
+
+<script src="debug-visibility.js"></script>
+<script src="debug-find-by-absolute.js"></script>
+
+<script src="debug-overlay.js"></script>
+<script src="debug-search.js"></script>
+<script src="debug-overlay-drag.js"></script>
+
+<script src="events.js"></script>
+
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        window.initEvents();
+        // Debug Overlay optional automatisch öffnen:
+        // document.getElementById("debugOverlay").style.display = "block";
+    });
+</script>
+
+</body>
+</html>

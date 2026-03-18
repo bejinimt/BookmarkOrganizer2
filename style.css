@@ -1,0 +1,175 @@
+/* ------------------------------------------------------------
+   Modernes UI für das Bookmark Tool
+   ------------------------------------------------------------ */
+
+body {
+    font-family: system-ui, sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    padding: 0;
+    color: #222;
+}
+
+header {
+    background: #4a6fa5;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 1.4rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+#controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px;
+    background: #ffffff;
+    border-bottom: 1px solid #ddd;
+}
+
+#controls button {
+    padding: 8px 12px;
+    border: none;
+    background: #4a6fa5;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#controls button:hover {
+    background: #3a5a85;
+}
+
+#controls input[type="text"] {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    flex-grow: 1;
+    min-width: 200px;
+}
+
+#messageArea {
+    padding: 10px 15px;
+    background: #eef3ff;
+    border-bottom: 1px solid #ccd8ff;
+    font-size: 0.95rem;
+}
+
+#treeContainer {
+    padding: 20px;
+}
+
+.bookmark-tree {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.folder-label {
+    font-weight: bold;
+    color: #2a4d7a;
+    cursor: pointer;
+}
+
+.bookmark-item {
+    margin: 4px 0;
+}
+
+.bookmark-item a {
+    color: #1a3d6d;
+    text-decoration: none;
+}
+
+.bookmark-item a:hover {
+    text-decoration: underline;
+}
+
+.entry-number {
+    color: #888;
+    margin-right: 4px;
+}
+
+.highlight {
+    background: #fffa9e;
+}
+
+.jump-highlight {
+    background: #ffe08a !important;
+    transition: background 1.5s ease-out;
+}
+
+/* ------------------------------------------------------------
+   Debug Overlay (bereinigt & funktionierend)
+   ------------------------------------------------------------ */
+
+#debugOverlay {
+    position: fixed;
+    top: 90px;
+    left: 910px;
+
+    width: 480px;
+    max-height: 70vh;
+
+    background: #222;
+    color: #eee;
+
+    border: 2px solid #555;
+    border-radius: 6px;
+
+    padding: 0;
+    z-index: 999999;
+
+    display: block; /* sichtbar */
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+/* Header – DRAG HANDLE */
+#debugHeader {
+    background: #4a6fa5;
+    color: white;
+    padding: 10px;
+    cursor: move;
+    border-radius: 6px 6px 0 0;
+    user-select: none;
+    z-index: 1000000;
+    position: relative;
+}
+
+/* Eingabefeld + Button */
+.debug-controls {
+    display: flex;
+    gap: 6px;
+    padding: 10px;
+    background: #333;
+}
+
+.debug-controls input {
+    flex: 1;
+    padding: 4px 6px;
+}
+
+/* Ausgabe */
+#debugContent {
+    background: #111;
+    padding: 10px;
+    border-radius: 0 0 6px 6px;
+    overflow-y: auto;
+    max-height: 40vh;
+    white-space: pre-wrap;
+}
+
+/* Schließen-Button */
+#debugOverlayClose {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background: #444;
+    color: #eee;
+    cursor: pointer;
+    border-radius: 0 0 6px 6px;
+}
+
+#debugOverlayClose:hover {
+    background: #666;
+}
