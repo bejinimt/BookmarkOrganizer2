@@ -10,6 +10,7 @@
 
     if (!btn || !input) return;
 
+    // Klick auf Button → Suche
     btn.addEventListener("click", () => {
 
         const num = input.value.trim();
@@ -21,13 +22,30 @@
         }
 
         const obj = window.bookmarkIndex[num];
-
-        // WICHTIG:
-        // KEIN renderTree()
-        // KEIN setMessage()
-        // KEIN console.log()
-        // → Nur Overlay anzeigen
         window.debugShowObject(obj);
+    });
+
+    // ------------------------------------------------------------
+    // ENTER / SHIFT+ENTER im Eingabefeld
+    // ------------------------------------------------------------
+    input.addEventListener("keydown", (ev) => {
+
+        // SHIFT + ENTER → Tag zuweisen
+        if (ev.key === "Enter" && ev.shiftKey) {
+            ev.preventDefault();
+
+            const tag = input.value.trim();
+            if (!tag) return;
+
+            window.addTagToCheckedBookmarks(tag);
+            return; // verhindert Ausführung des normalen ENTER-Blocks
+        }
+
+        // Nur ENTER → Suche
+        if (ev.key === "Enter") {
+            ev.preventDefault();
+            btn.click();
+        }
     });
 
 })();

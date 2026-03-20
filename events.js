@@ -79,25 +79,5 @@ window.initEvents = function () {
     bind("btnToDelete", window.markToDelete);
     bind("btnToDeleteUndo", window.undoToDelete);
 
-    // ------------------------------------------------------------
-    // Debug absoluteNumber → jetzt korrekt ins Overlay
-    // ------------------------------------------------------------
-    const debugBtn = document.getElementById("debugSearchAbsoluteBtn");
-    const debugInput = document.getElementById("debugAbsoluteInput");
 
-    if (debugBtn && debugInput) {
-        debugBtn.addEventListener("click", () => {
-            const num = debugInput.value.trim();
-            if (!num) return;
-
-            const obj = window.bookmarkIndex?.[num];
-
-            // WICHTIG:
-            // Kein console.log()
-            // Kein setMessage()
-            // Kein renderTree()
-            // → Nur Overlay anzeigen
-            window.debugShowObject(obj);
-        });
-    }
 };
