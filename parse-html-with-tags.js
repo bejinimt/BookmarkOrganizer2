@@ -225,7 +225,6 @@ window.parseBookmarkHTMLWithTags = function (htmlText) {
         // ------------------------------------------------------------
 
         function createFolder(title) {
-            DBG("createFolder('" + title + "')");
 
             folderCounter++;
             const folder = {
@@ -241,14 +240,6 @@ window.parseBookmarkHTMLWithTags = function (htmlText) {
             window.bookmarkData.folders.push(folder);
 
             localCounters[folder.id] = { count: 0 };
-
-            DBG("→ Ordner erzeugt", {
-                id: folder.id,
-                title: folder.title,
-                folderStack,
-                numberStack,
-                localCounters
-            });
 
             return folder;
         }
@@ -290,22 +281,11 @@ window.parseBookmarkHTMLWithTags = function (htmlText) {
             // ------------------------------------------------------------
             if (upper.includes("<DT><H3") || upper.includes("<H3")) {
 
-                DBG("ZEILE: Ordner öffnen (H3 erkannt)", {
-                    line,
-                    folderStack,
-                    numberStack,
-                    localCounters
-                });
-
                 const title = extractH3Title(line) || "(Ohne Titel)";
-                DBG("ZEILE: title = extractH3Title()", { title });
 
                 const newFolder = createFolder(title);
 
                 if (folderStack.length > 0) {
-                    DBG("ZEILE: verschachtelter Ordner", {
-                        parentId: folderStack.at(-1)
-                    });
 
                     const parentId = folderStack.at(-1);
                     const parentFolder = window.bookmarkData.folders.find(f => f.id === parentId);
@@ -325,37 +305,18 @@ window.parseBookmarkHTMLWithTags = function (htmlText) {
                     newFolder.absoluteNumber = num;
                     numberStack.push(num);
 
-                    DBG("ZEILE: absoluteNumber = parentNum + count", {
-                        parentNum,
-                        count: localCounters[parentId].count,
-                        result: num,
-                        folderStack,
-                        numberStack,
-                        localCounters
-                    });
+
 
                 } else {
-                    DBG("ZEILE: Root-Ordner");
 
                     newFolder.absoluteNumber = "0";
                     numberStack.push("0");
 
-                    DBG("ZEILE: Root-Ordner gesetzt", {
-                        id: newFolder.id,
-                        title: newFolder.title,
-                        absoluteNumber: "0",
-                        folderStack,
-                        numberStack
-                    });
+
                 }
 
                 folderStack.push(newFolder.id);
 
-                DBG("ZEILE: Nach Ordner-Öffnen", {
-                    folderStack,
-                    numberStack,
-                    localCounters
-                });
 
                 continue;
             }
@@ -365,18 +326,10 @@ window.parseBookmarkHTMLWithTags = function (htmlText) {
             // ------------------------------------------------------------
             if (upper.includes("<DT><A") || upper.includes("<A ")) {
 
-                DBG("ZEILE: Bookmark erkannt (A)", {
-                    line,
-                    folderStack,
-                    numberStack,
-                    localCounters
-                });
-
                 const href = extractHref(line);
                 let title = extractATitle(line);
                 if (!title) title = href || "(Ohne Titel)";
 
-                DBG("ZEILE: title/href extrahiert", { title, href });
 
                 // Tags extrahieren
                 let tags = [];
@@ -384,27 +337,34 @@ window.parseBookmarkHTMLWithTags = function (htmlText) {
                 if (tagMatch) {
                     title = tagMatch[1].trim();
                     tags = tagMatch[2].split(",").map(t => t.trim());
-                    DBG("ZEILE: Tags extrahiert", { title, tags });
+
                 }
 
+                //hier wird jetzt der letzte Ordner, in dem das Bookmark gespeichert werden soll, weil es sich in diesem befindet
+                //aus dem array bookmarData.folders[] gesucht
+                //die ordner sind anhand ihrer Eigenschaft .id chronologisch aufgeführt, beginnend mit 1, dann 2, dann 3...
+                //dies sagt aber nichts über die Verschachtelung aus
+                //die akutell letzte id von dem Ordner, der zuletzt bearbeitet wurde und in dem man sich befindet
+                //wurd auf den folderStack gepushed. Die id befindet sich also im letzten Eintrag, der mit .at(-1) angesprochenwird
+
                 const currentFolderId = folderStack.at(-1);
+
+                //hier wird das bereits zuvor im bookmarData-Array gespeichete Ordner-Objekt als Objekt in currentFolder gespeichert
                 const currentFolder = window.bookmarkData.folders.find(f => f.id === currentFolderId);
 
+                //das Objekt hat die Eigenschaft .count ,welche mitzählt, wieviele Kinder es hat, also Unterordner oder Bookmars
+                //diese beginnen immer mit 1, also tatsächlich eine Zählung
                 localCounters[currentFolderId].count++;
 
+                //numberStack speichert in einem Array die tatsächliche, zuvor bereits zusammengesetzte Verschachtelungsbezeichnung
+                //der Ordner, wobei ein Unterordner, wenn er erst als 2. Kind in dem Parentordner auftaucht, auch die .2 nach eine Bookmark haben kann
+                //der letzte Wert auf dem numberStack ist dann der Bezeichner, an den der Counterwert in diesem Ordner angehangen wird und
+                //somit die absolute Bezeichnung für das Bookmark ergibt
                 const base = numberStack.at(-1);
                 const absNum = base
                     ? base + "." + localCounters[currentFolderId].count
                     : "" + localCounters[currentFolderId].count;
 
-                DBG("ZEILE: absoluteNumber = base + count", {
-                    base,
-                    count: localCounters[currentFolderId].count,
-                    absNum,
-                    folderStack,
-                    numberStack,
-                    localCounters
-                });
 
                 currentFolder.children.push({
                     type: "bookmark",
@@ -418,13 +378,7 @@ window.parseBookmarkHTMLWithTags = function (htmlText) {
                     to_delete: false
                 });
 
-                DBG("ZEILE: Nach Bookmark", {
-                    folderStack,
-                    numberStack,
-                    localCounters
-                });
-
-                continue;
+              continue;
             }
 
             // ------------------------------------------------------------
@@ -432,28 +386,15 @@ window.parseBookmarkHTMLWithTags = function (htmlText) {
             // ------------------------------------------------------------
             if (upper.includes("</DL>")) {
 
-                DBG("ZEILE: Ordner schließen (</DL>)", {
-                    folderStack,
-                    numberStack
-                });
 
                 if (folderStack.length > 1) {
                     folderStack.pop();
                     numberStack.pop();
                 }
 
-                DBG("ZEILE: Nach Ordner-Schließen", {
-                    folderStack,
-                    numberStack
-                });
-
                 continue;
             }
         }
-
-        DBG("END parseBookmarkHTMLWithTags()", {
-            folders: window.bookmarkData.folders.length
-        });
 
         window.setMessage("Lesezeichen erfolgreich geladen.");
 
