@@ -37,7 +37,7 @@ window.exportAsHTML = function () {
             // Bookmark
             if (child.type === "bookmark") {
 
-                if (child.visible === false) continue;
+                if (child.visible === false || child.to_delete === true) continue;
 
                 let title = child.title || child.url || "(Ohne Titel)";
 
@@ -51,6 +51,9 @@ window.exportAsHTML = function () {
 
             // Unterordner
             if (child.type === "folder") {
+
+                if (child.visible === false || child.to_delete === true) continue;
+
                 const sub = window.bookmarkData.folders.find(f => f.id === child.ref);
                 if (sub && sub.visible !== false) {
                     exportFolder(sub, indent + 2);
